@@ -4,6 +4,8 @@ import android.util.Log;
 
 public class AzzieLog {
 
+    public static boolean outputToAndroidLog = false;
+
     private static String makeString(Object field){
         if (field == null) return "null";
         return field.toString();
@@ -26,7 +28,11 @@ public class AzzieLog {
     }
 
     public static void log(Object... fields) {
-        android.util.Log.i("AzzieLog", toLogString(fields));
+        if (outputToAndroidLog){
+            android.util.Log.i("AzzieLog", toLogString(fields));
+        } else {
+            System.out.println(toLogString(fields));
+        }
     }
 
     public static void fail(Object... fields) {
