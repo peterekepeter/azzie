@@ -6,4 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:clickable="true"
+                android:onClick="onClickDatasetField"
+                android:background="@drawable/btn_ripple_effect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tooltipText="Developer information."
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Using "/>
+                <TextView
+                    android:id="@+id/datasetField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="some"
+                    android:textColor="@color/colorAccent"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" dataset."/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:clickable="true"
+                android:onClick="onClickActivityField"
+                android:background="@drawable/btn_ripple_effect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You have been "/>
+                <TextView
+                    android:id="@+id/currentActivityField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="not doing anthing"
+                    android:textColor="@color/colorAccent"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "/>
+                <TextView
+                    android:id="@+id/currentActivityTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="since forever"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="."/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

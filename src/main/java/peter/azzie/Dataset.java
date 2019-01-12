@@ -1,14 +1,24 @@
 package peter.azzie;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import peter.azzie.event.EventBase;
+import peter.azzie.event.StartUserActivity;
+
 import static peter.azzie.AzzieLog.*;
 
 public class Dataset {
 
     private final File directory;
+    private final EventSource mainEventSource;
 
     public Dataset(String directoryPath) {
         directory = setupDatasetDirectory(directoryPath);
+        String mainEventSourceFile = directoryPath + File.separator + "events.txt";
+        log("main event source is ", mainEventSourceFile);
+        mainEventSource = new EventSource(mainEventSourceFile);
     }
 
     private static File setupDatasetDirectory(String directoryPath){
@@ -28,6 +38,14 @@ public class Dataset {
         }
         if (directory.isDirectory() == false) { fail("expecting", directory, "to be a directory"); }
         return directory;
+    }
+
+    public ArrayList<EventBase> readExistingActivities(){
+        return mainEventSource.readAll();
+    }
+
+    public void writeNewActivity(StartUserActivity activity){
+        mainEventSource.append(activity);
     }
 
 }

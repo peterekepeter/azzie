@@ -67,4 +67,9 @@ public class EventBase {
         event.rawString = data;
         return event;
     }
+
+    public boolean isStartUserActivity() { return typename.equals(StartUserActivity.typename); }
+
+    public StartUserActivity toStartUserActivity() { return (StartUserActivity) this; }
+
 }
