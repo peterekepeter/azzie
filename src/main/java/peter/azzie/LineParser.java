@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-class LineParser {
+public class LineParser {
     public static String encodeString(String str){
         boolean wrapInQuotes = false;
         StringBuilder output = new StringBuilder();
