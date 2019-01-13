@@ -7,7 +7,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         controller.selectDataset(which);
         TextView datasetField = ((TextView)findViewById(R.id.datasetField));
         datasetField.setText(controller.getDatasetName());
+        updateCurrentActivityView();
     }
 
     public void updateCurrentActivityView(){
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         DialogChoiceHandler handler = new DialogChoiceHandler(testItems);
         builder.setSingleChoiceItems(testItems, -1, handler);
         builder.setNegativeButton("New Custom Activity", (dialog, which) -> {
+            onSetCustomActivity();
             log(which);
         });
         builder.setPositiveButton("Confirm", (dialog, which) -> {
@@ -103,5 +108,23 @@ public class MainActivity extends AppCompatActivity {
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setEnabled(false);
         handler.positiveButton = positiveButton;
+    }
+
+    private void onSetCustomActivity() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Name of custom activity?");
+
+        final EditText input = new EditText(this);
+        //input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        builder.setPositiveButton("Create And Set", (dialog, which) -> {
+            String text = input.getText().toString();
+            controller.setCurrentActivity(text);
+            log("received custom activity input", text);
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> log("cancelled dialog"));
+
+        builder.show();
     }
 }

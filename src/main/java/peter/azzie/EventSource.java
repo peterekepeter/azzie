@@ -34,8 +34,10 @@ public class EventSource {
         }
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
+            log("contents of", filename, "are:");
             while ((line = br.readLine()) != null) {
                 // process the line.
+                log(line);
                 data.add(EventBase.fromString(line));
             }
         } catch (IOException e) {

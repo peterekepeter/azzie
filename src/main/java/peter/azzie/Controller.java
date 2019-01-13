@@ -4,6 +4,11 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
 
 import peter.azzie.event.EventBase;
 import peter.azzie.event.StartUserActivity;
@@ -29,7 +34,6 @@ public class Controller {
     String internalDirectory;
     Dataset dataset;
     String datasetName;
-    String currentActivity;
     ArrayList<EventBase> eventList;
 
     String[] getDatasets(){
@@ -45,6 +49,8 @@ public class Controller {
         String datasetPath = internalDirectory + File.separator + which;
         log("using dataset", which);
         dataset = new Dataset(datasetPath);
+        // need to invalidate internal state
+        eventList = null;
     }
 
     public String getDatasetName() {
@@ -59,7 +65,34 @@ public class Controller {
     }
 
     public String[] getSuggestedActivities() {
-        return new String[] { "relaxing", "working", "sleeping", "commuting" };
+        if (eventList == null || eventList.size() == 0){
+            return new String[] { "relaxing", "working", "sleeping", "commuting" };
+        }
+        StartUserActivity last = findLastActivity();
+        StartUserActivity previous = null;
+        HashMap<String, Integer> score = new HashMap<String, Integer>();
+        for (EventBase event : eventList){
+            if (event.isStartUserActivity()){
+                StartUserActivity current = event.toStartUserActivity();
+                if (current.activity.equals(last.activity)){
+                    continue;
+                }
+                int scoreModifier = -1;
+                if (previous != null && previous.activity.equals(last.activity)){
+                    scoreModifier -= 2;
+                }
+                if (score.containsKey(current.activity)){
+                    score.put(current.activity, score.get(current.activity) + scoreModifier);
+                } else {
+                    score.put(current.activity, scoreModifier);
+                }
+                previous = current;
+            }
+        }
+        Set<String> keySet = score.keySet();
+        String[] keys = score.keySet().toArray(new String[keySet.size()]);
+        Arrays.sort(keys, Comparator.comparing(score::get));
+        return keys;
     }
 
     private StartUserActivity findLastActivity(){
@@ -127,11 +160,15 @@ public class Controller {
     }
 
     public void setCurrentActivity(String activity){
+        StartUserActivity last = findLastActivity();
+        if (last != null && last.activity.equals(activity)){
+            log("new activity is same as old one, no change, no write", activity);
+            return;
+        }
         StartUserActivity event = new StartUserActivity(now(), activity);
         if (eventList != null){
             eventList.add(event);
         }
-        currentActivity = activity;
         dataset.writeNewActivity(event);
     }
 }
