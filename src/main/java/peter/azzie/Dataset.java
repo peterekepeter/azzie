@@ -5,19 +5,20 @@ import java.util.ArrayList;
 
 import peter.azzie.event.EventBase;
 import peter.azzie.event.StartUserActivity;
+import peter.azzie.io.DataLayer;
 
 import static peter.azzie.AzzieLog.*;
 
 public class Dataset {
 
     private final File directory;
-    private final FileEventSource mainEventSource;
+    private final UserActivityStorage mainUserActivityStorage;
 
-    public Dataset(String directoryPath) {
+    public Dataset(DataLayer dataLayer, String directoryPath) {
         directory = setupDatasetDirectory(directoryPath);
         String mainEventSourceFile = directoryPath + File.separator + "events.txt";
         log("main event source is ", mainEventSourceFile);
-        mainEventSource = new FileEventSource(mainEventSourceFile);
+        mainUserActivityStorage = new UserActivityStorage(dataLayer.getStorage(mainEventSourceFile));
     }
 
     private static File setupDatasetDirectory(String directoryPath){
@@ -40,11 +41,11 @@ public class Dataset {
     }
 
     public ArrayList<EventBase> readExistingActivities(){
-        return mainEventSource.readAll();
+        return mainUserActivityStorage.readAll();
     }
 
     public void writeNewActivity(StartUserActivity activity){
-        mainEventSource.append(activity);
+        mainUserActivityStorage.append(activity);
     }
 
 }

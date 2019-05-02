@@ -18,23 +18,23 @@ public class FileSettingsTest {
     }
 
     @Test public void canWriteSettings(){
-        FileSettings settings = makeFileSettings();
+        SettingsStorage settings = makeFileSettings();
         settings.setString("color", "blue");
         assertThat(settings.getString("color")).isEqualTo("blue");
     }
 
     @Test public void dataLayerEnsuresPersistance(){
         MemoryDataLayer dataLayer = new MemoryDataLayer();
-        FileSettings settings = new FileSettings(dataLayer.getStorage("settings.txt"));
+        SettingsStorage settings = new SettingsStorage(dataLayer.getStorage("settings.txt"));
         settings.setString("color", "blue");
-        settings = new FileSettings(dataLayer.getStorage("settings.txt"));
+        settings = new SettingsStorage(dataLayer.getStorage("settings.txt"));
         assertThat(settings.getString("color")).isEqualTo("blue");
     }
 
     @Test public void differentPathsStoreDifferentSettings(){
-        FileSettings[] users = makeMultiple("user1.txt", "user2.txt");
-        FileSettings user1 = users[0];
-        FileSettings user2 = users[1];
+        SettingsStorage[] users = makeMultiple("user1.txt", "user2.txt");
+        SettingsStorage user1 = users[0];
+        SettingsStorage user2 = users[1];
         user1.setString("color", "blue");
         assertThat(user2.getString("color")).isNotEqualTo("blue");
         user2.setString("color", "red");
@@ -42,7 +42,7 @@ public class FileSettingsTest {
     }
 
     @Test public void canStoreMultipleValues(){
-        FileSettings settings = makeFileSettings();
+        SettingsStorage settings = makeFileSettings();
         settings.setString("name", "John");
         settings.setString("age", "42");
         assertThat(settings.getString("name")).isEqualTo("John");
@@ -53,15 +53,15 @@ public class FileSettingsTest {
         return new MemoryDataLayer();
     }
 
-    private FileSettings makeFileSettings(){
-        return new FileSettings(makeDataLayer().getStorage("settings.txt"));
+    private SettingsStorage makeFileSettings(){
+        return new SettingsStorage(makeDataLayer().getStorage("settings.txt"));
     }
 
-    private FileSettings[] makeMultiple(String... paths){
+    private SettingsStorage[] makeMultiple(String... paths){
         DataLayer dataLayer = makeDataLayer();
-        FileSettings[] result = new FileSettings[paths.length];
+        SettingsStorage[] result = new SettingsStorage[paths.length];
         for (int i=0; i<result.length; i++){
-            result[i] = new FileSettings(dataLayer.getStorage(paths[i]));
+            result[i] = new SettingsStorage(dataLayer.getStorage(paths[i]));
         }
         return result;
     }

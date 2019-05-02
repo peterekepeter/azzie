@@ -5,17 +5,21 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
 import peter.azzie.event.EventBase;
 import peter.azzie.event.StartUserActivity;
+import peter.azzie.io.DataLayer;
 
 import static peter.azzie.AzzieLog.log;
 
-public class Controller {
+public class Azzie {
+
+    public Azzie(DataLayer dataLayer) {
+        this.dataLayer = dataLayer;
+    }
 
     private String makePath(String filePath)
     {
@@ -26,6 +30,7 @@ public class Controller {
     Dataset dataset;
     String datasetName;
     ArrayList<EventBase> eventList;
+    private DataLayer dataLayer;
 
     String[] getDatasets(){
         return new String[] { "test", "live" };
@@ -39,7 +44,7 @@ public class Controller {
         datasetName = which;
         String datasetPath = internalDirectory + File.separator + which;
         log("using dataset", which);
-        dataset = new Dataset(datasetPath);
+        dataset = new Dataset(dataLayer, datasetPath);
         // need to invalidate internal state
         eventList = null;
     }

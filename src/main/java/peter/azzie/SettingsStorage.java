@@ -5,28 +5,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import peter.azzie.io.DataStorage;
-import peter.azzie.io.Settings;
 
 import static peter.azzie.AzzieLog.log;
 
-public class FileSettings implements Settings {
+public class SettingsStorage {
 
     DataStorage storage;
 
-    FileSettings(DataStorage storage){
+    SettingsStorage(DataStorage storage){
         this.storage = storage;
     }
 
     boolean didRead = false;
     Map<String, String> data;
 
-    @Override
     public String getString(String key) {
         makeSureDataWasRead();
         return data.getOrDefault(key, null);
     }
 
-    @Override
     public void setString(String key, String value) {
         makeSureDataWasRead();
         data.put(key, value);
@@ -45,7 +42,7 @@ public class FileSettings implements Settings {
         for (String line : storage.readAllLines()){
             String[] values = LineParser.decodeLine(line);
             if (values.length != 2){
-                log("FileSettings found corrupted data line", line);
+                log("SettingsStorage found corrupted data line", line);
                 continue;
             }
             data.put(values[0], values[1]);

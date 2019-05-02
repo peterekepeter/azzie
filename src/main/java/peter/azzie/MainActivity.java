@@ -1,33 +1,33 @@
 package peter.azzie;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import peter.azzie.io.DataLayer;
+import peter.azzie.io.file.FileDataLayer;
 
 import static peter.azzie.AzzieLog.log;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Controller controller;
+    private Azzie controller;
     private Handler handler;
+    private DataLayer dataLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller();
+        dataLayer = new FileDataLayer();
+        controller = new Azzie(dataLayer);
 
         setContentView(R.layout.activity_main);
         File internalDirectory = getApplicationContext().getFilesDir();
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCurrentActivityView(){
-        Controller.CurrentActivityInfo current = controller.getCurrentActivity();
+        Azzie.CurrentActivityInfo current = controller.getCurrentActivity();
         ((TextView)findViewById(R.id.currentActivityField)).setText(current.activity);
         ((TextView)findViewById(R.id.currentActivityTime)).setText(current.timeExpression);
     }
