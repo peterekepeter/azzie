@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.*;
 import peter.azzie.io.DataLayer;
 import peter.azzie.io.memory.MemoryDataLayer;
 
-public class FileSettingsTest {
+public class SettingsStorageTest {
 
     @Test public void canCreate(){
         assertThatCode(() -> makeFileSettings()).doesNotThrowAnyException();

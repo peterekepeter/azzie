@@ -1,4 +1,4 @@
-package peter.azzie;
+package peter.azzie.android;
 
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import peter.azzie.Azzie;
+import peter.azzie.R;
 import peter.azzie.io.DataLayer;
 import peter.azzie.io.file.FileDataLayer;
 
@@ -19,43 +21,44 @@ import static peter.azzie.AzzieLog.log;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Azzie controller;
-    private Handler handler;
+    private Azzie azzie;
     private DataLayer dataLayer;
+
+    private Handler timerHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataLayer = new FileDataLayer();
-        controller = new Azzie(dataLayer);
+        File internalDirectory = getApplicationContext().getFilesDir();
+
+        dataLayer = new FileDataLayer(internalDirectory.getAbsolutePath());
+        azzie = new Azzie(dataLayer);
 
         setContentView(R.layout.activity_main);
-        File internalDirectory = getApplicationContext().getFilesDir();
-        controller.setInternalDirectory(internalDirectory.getAbsolutePath());
 
-        selectDataset(controller.getDatasets()[0]);
+        selectDataset(azzie.getDatasets()[0]);
 
         // setup timer
-        handler = new Handler();
+        timerHandler = new Handler();
         final Runnable updater = new Runnable() {
             @Override
             public void run() {
-                handler.postDelayed(this, 1000);
+                timerHandler.postDelayed(this, 1000);
                 updateCurrentActivityView();
             }
         };
-        handler.postDelayed(updater, 1000);
+        timerHandler.postDelayed(updater, 1000);
     }
 
     public void selectDataset(String which){
-        controller.selectDataset(which);
+        azzie.selectDataset(which);
         TextView datasetField = ((TextView)findViewById(R.id.datasetField));
-        datasetField.setText(controller.getDatasetName());
+        datasetField.setText(azzie.getDatasetName());
         updateCurrentActivityView();
     }
 
     public void updateCurrentActivityView(){
-        Azzie.CurrentActivityInfo current = controller.getCurrentActivity();
+        Azzie.CurrentActivityInfo current = azzie.getCurrentActivity();
         ((TextView)findViewById(R.id.currentActivityField)).setText(current.activity);
         ((TextView)findViewById(R.id.currentActivityTime)).setText(current.timeExpression);
     }
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickDatasetField(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Dataset");
-        String[] datasets = controller.getDatasets();
+        String[] datasets = azzie.getDatasets();
         builder.setItems(datasets, (dialog, which) -> {
             selectDataset(datasets[which]);
         });
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Start");
 
-        String[] testItems = controller.getSuggestedActivities();
+        String[] testItems = azzie.getSuggestedActivities();
         DialogChoiceHandler handler = new DialogChoiceHandler(testItems);
         builder.setSingleChoiceItems(testItems, -1, handler);
         builder.setNegativeButton("New Custom Activity", (dialog, which) -> {
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             log(which);
         });
         builder.setPositiveButton("Confirm", (dialog, which) -> {
-            controller.setCurrentActivity(handler.selectedItem);
+            azzie.setCurrentActivity(handler.selectedItem);
             updateCurrentActivityView();
         });
         AlertDialog dialog = builder.create();
@@ -120,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Create And Set", (dialog, which) -> {
             String text = input.getText().toString();
-            controller.setCurrentActivity(text);
+            azzie.setCurrentActivity(text);
             log("received custom activity input", text);
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> log("cancelled dialog"));

@@ -21,28 +21,18 @@ public class Azzie {
         this.dataLayer = dataLayer;
     }
 
-    private String makePath(String filePath)
-    {
-        return internalDirectory + File.separator + filePath;
-    }
-
-    String internalDirectory;
     Dataset dataset;
     String datasetName;
     ArrayList<EventBase> eventList;
     private DataLayer dataLayer;
 
-    String[] getDatasets(){
+    public String[] getDatasets(){
         return new String[] { "test", "live" };
-    }
-
-    public void setInternalDirectory(String absolutePath) {
-        internalDirectory = absolutePath;
     }
 
     public void selectDataset(String which) {
         datasetName = which;
-        String datasetPath = internalDirectory + File.separator + which;
+        String datasetPath = which;
         log("using dataset", which);
         dataset = new Dataset(dataLayer, datasetPath);
         // need to invalidate internal state
@@ -54,6 +44,9 @@ public class Azzie {
     }
 
     private ArrayList<EventBase> getOrReadEvents(){
+        if (dataset == null){
+            selectDataset(getDatasets()[0]);
+        }
         if (eventList == null){
             eventList = dataset.readExistingActivities();
         }
@@ -105,8 +98,8 @@ public class Azzie {
 
     public class CurrentActivityInfo
     {
-        String activity;
-        String timeExpression;
+        public String activity;
+        public String timeExpression;
         StartUserActivity event;
 
         public CurrentActivityInfo(String activity, String timeExpression, StartUserActivity event) {

@@ -1,7 +1,5 @@
 package peter.azzie;
 
-import android.util.EventLog;
-
 import org.junit.Test;
 
 import java.time.LocalDateTime;

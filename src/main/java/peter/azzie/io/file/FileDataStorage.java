@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-import peter.azzie.event.EventBase;
 import peter.azzie.io.DataStorage;
 
 import static peter.azzie.AzzieLog.fail;
@@ -67,6 +66,9 @@ public class FileDataStorage implements DataStorage {
 
             private String read(){
                 try {
+                    if (br == null){
+                        br = new BufferedReader(new FileReader(file));
+                    }
                     return br.readLine();
                 } catch (IOException e) {
                     fail("File read failiure at ", file.getName());
