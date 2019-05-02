@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = Controller.getInstance();
+        controller = new Controller();
 
         setContentView(R.layout.activity_main);
         File internalDirectory = getApplicationContext().getFilesDir();

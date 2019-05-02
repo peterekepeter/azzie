@@ -17,11 +17,11 @@ import peter.azzie.event.EventBase;
 import static peter.azzie.AzzieLog.fail;
 import static peter.azzie.AzzieLog.log;
 
-public class EventSource {
+public class FileEventSource {
 
     private final String filename;
 
-    public EventSource(String filename){
+    public FileEventSource(String filename){
         this.filename = filename;
     }
 

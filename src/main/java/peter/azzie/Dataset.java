@@ -2,7 +2,6 @@ package peter.azzie;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import peter.azzie.event.EventBase;
 import peter.azzie.event.StartUserActivity;
@@ -12,13 +11,13 @@ import static peter.azzie.AzzieLog.*;
 public class Dataset {
 
     private final File directory;
-    private final EventSource mainEventSource;
+    private final FileEventSource mainEventSource;
 
     public Dataset(String directoryPath) {
         directory = setupDatasetDirectory(directoryPath);
         String mainEventSourceFile = directoryPath + File.separator + "events.txt";
         log("main event source is ", mainEventSourceFile);
-        mainEventSource = new EventSource(mainEventSourceFile);
+        mainEventSource = new FileEventSource(mainEventSourceFile);
     }
 
     private static File setupDatasetDirectory(String directoryPath){

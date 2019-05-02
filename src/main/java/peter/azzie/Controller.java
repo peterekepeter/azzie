@@ -17,15 +17,6 @@ import static peter.azzie.AzzieLog.log;
 
 public class Controller {
 
-    private static Controller instance = null;
-
-    public static Controller getInstance(){
-        if (instance == null){
-            instance = new Controller();
-        }
-        return instance;
-    }
-
     private String makePath(String filePath)
     {
         return internalDirectory + File.separator + filePath;
