@@ -11,13 +11,13 @@ import static peter.azzie.AzzieLog.log;
 public class SettingsStorage {
 
     DataStorage storage;
+    Map<String, String> data;
+    boolean didRead = false;
+    boolean didChange = false;
 
     SettingsStorage(DataStorage storage){
         this.storage = storage;
     }
-
-    boolean didRead = false;
-    Map<String, String> data;
 
     public String getString(String key) {
         makeSureDataWasRead();
@@ -25,15 +25,27 @@ public class SettingsStorage {
     }
 
     public void setString(String key, String value) {
-        makeSureDataWasRead();
+        String previousValue = getString(key);
+        if (previousValue == value || previousValue != null && previousValue.equals(value)){
+            return;
+        };
+        didChange = true;
         data.put(key, value);
-        writeData();
+    }
+
+    public boolean hasChanges(){
+        return didChange;
+    }
+
+    public void saveChanges(){
+        if (hasChanges()){
+            writeData();
+        }
     }
 
     private void makeSureDataWasRead(){
         if (!didRead){
             readDataFromFile();
-            didRead = true;
         }
     }
 
@@ -48,6 +60,8 @@ public class SettingsStorage {
             data.put(values[0], values[1]);
         }
         this.data = data;
+        didRead = true;
+        didChange = false;
     }
 
     private void writeData(){
@@ -59,6 +73,7 @@ public class SettingsStorage {
             values.add(encoded);
         }
         storage.rewriteAllLines(values);
+        didChange = false;
     }
 
 }
